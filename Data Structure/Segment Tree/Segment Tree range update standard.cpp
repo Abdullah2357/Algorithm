@@ -18,9 +18,9 @@ void Init(int node,int b,int e)
         tree[node].sum = a[b];
         return ;
     }
-    int lft = node*2;
-    int rgt = node*2+1;
-    int mid = (b+e)/2;
+    int lft = node<<1;
+    int rgt = (node<<1)+1;
+    int mid = (b+e)>>1;
 
     Init(lft,b,mid);
     Init(rgt,mid+1,e);
@@ -33,8 +33,8 @@ void push_down(int node,int b,int e)
     tree[node].sum = tree[node].sum + tree[node].prop*(e-b+1);
     if(b!=e)
     {
-        tree[node*2].prop += tree[node].prop;
-        tree[(node*2)+1].prop += tree[node].prop;
+        tree[node<<1].prop += tree[node].prop;
+        tree[(node<<1)+1].prop += tree[node].prop;
     }
         tree[node].prop = 0;
 }
@@ -50,9 +50,9 @@ ll Query(int node,int b,int e,int i,int j)
     if(b>=i && e<=j)
         return tree[node].sum;
 
-    int mid = (b+e)/2;
-    ll sum1 = Query(node*2,b,mid,i,j);
-    ll sum2 = Query((node*2)+1,mid+1,e,i,j);
+    int mid = (b+e)>>1;
+    ll sum1 = Query(node<<1,b,mid,i,j);
+    ll sum2 = Query((node<<1)+1,mid+1,e,i,j);
 
     return sum1+sum2;
 }
@@ -71,18 +71,18 @@ void Update(int node,int b,int e,int i,int j,int x)
         tree[node].sum += x*(e-b+1);
         if(b!= e)
         {
-            tree[node*2].prop += x;
-            tree[(node*2)+1].prop += x;
+            tree[node<<1].prop += x;
+            tree[(node<<1)+1].prop += x;
         }
         return;
     }
 
-    int mid = (b+e)/2;
+    int mid = (b+e)>>1;
 
-    Update(node*2,b,mid,i,j,x);
-    Update((node*2)+1,mid+1,e,i,j,x);
+    Update(node<<1,b,mid,i,j,x);
+    Update((node<<1)+1,mid+1,e,i,j,x);
 
-    tree[node].sum = tree[node*2].sum + tree[(node*2)+1].sum;
+    tree[node].sum = tree[node<<1].sum + tree[(node<<1)+1].sum;
 }
 
 void Solve(int t)
